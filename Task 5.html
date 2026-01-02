@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0ea5e9, #1e293b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .weather {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            width: 320px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            color: #ffffff;
+        }
+
+        .weather h2 {
+            margin-bottom: 15px;
+            font-size: 26px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #22c55e;
+            color: #022c22;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        #output {
+            margin-top: 18px;
+        }
+
+        .temp {
+            font-size: 42px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #facc15;
+        }
+
+        #output p {
+            margin: 6px 0;
+            font-size: 15px;
+            color: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="weather">
+    <h2>🌤 Weather App</h2>
+
+    <input type="text" id="city" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div id="output"></div>
+</div>
+
+<script>
+    const apiKey = "9b29690096a414e2580a5a6d59637bf8"; // Replace with your API key
+
+    function getWeather() {
+        const city = document.getElementById("city").value;
+
+        if (city === "") {
+            alert("Pune");
+            return;
+        }
+
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.cod !== 200) {
+                    document.getElementById("output").innerHTML = "City not found";
+                    return;
+                }
+
+                document.getElementById("output").innerHTML = `
+                    <h3>${data.name}</h3>
+                    <div class="temp">${data.main.temp}°C</div>
+                    <p>🌥 Weather: ${data.weather[0].description}</p>
+                    <p>💧 Humidity: ${data.main.humidity}%</p>
+                    <p>🌬 Wind Speed: ${data.wind.speed} m/s</p>
+                `;
+            })
+            .catch(() => {
+                document.getElementById("output").innerHTML = "Error fetching weather data";
+            });
+    }
+</script>
+
+</body>
+</html>
